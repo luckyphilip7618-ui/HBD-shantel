@@ -47,6 +47,24 @@ margin-top:20px;
 font-size:22px;
 letter-spacing:3px;
 color:#ff5e8a;
+margin-bottom: 30px;
+}
+
+.start-btn {
+padding: 12px 35px;
+font-size: 18px;
+color: white;
+background: #ff2d75;
+border: none;
+border-radius: 25px;
+cursor: pointer;
+box-shadow: 0 0 20px rgba(255, 45, 117, 0.6);
+transition: 0.3s;
+}
+
+.start-btn:hover {
+transform: scale(1.05);
+background: #ff5e8a;
 }
 
 canvas{
@@ -256,7 +274,8 @@ padding:30px;
 
 <div id="loader">
 <div class="loader-heart">💖</div>
-<div class="loading-text">Loading Smile's App...</div>
+<div class="loading-text">Smile's Birthday App is Ready</div>
+<button class="start-btn" onclick="startApp()">Enter App ✨</button>
 </div>
 
 <canvas id="fireworks"></canvas>
@@ -402,21 +421,29 @@ Made with ❤️ specially for Smile.
 </audio>
 
 <script>
-// Fade out loader neatly
-setTimeout(()=>{
+const music=document.getElementById('music');
+
+// Triggers immediately when they click "Enter App" on the loading screen
+function startApp() {
 const loader = document.getElementById('loader');
 loader.style.opacity = '0';
 setTimeout(() => loader.style.display='none', 500);
-},3000)
+
+// Play music immediately
+music.play().catch(err => console.log("Audio play allowed after click"));
+}
 
 let appOpened = false;
 function openApp(){
 window.scrollTo({top:window.innerHeight,behavior:'smooth'});
 launchFireworks();
+
 if(!appOpened){
 appOpened = true;
 typeText();
 }
+// Keeps music playing smoothly if already active
+music.play().catch(err => console.log("Audio error check"));
 }
 
 const text=`Shantel, today the world feels brighter because it is your birthday. You are beautiful, special, kind and unforgettable. May your smile never fade and may happiness always find you. Happy Birthday Queen ✨💖`;
@@ -457,16 +484,11 @@ document.getElementById('seconds').innerHTML=seconds.toString().padStart(2, '0')
 setInterval(updateCountdown,1000);
 updateCountdown();
 
-const music=document.getElementById('music');
-let playing=false;
-
 function toggleMusic(){
-if(!playing){
-music.play().catch(err => console.log("Audio playback delayed until user interaction"));
-playing=true;
+if(music.paused){
+music.play().catch(err => console.log("Audio playback error"));
 }else{
 music.pause();
-playing=false;
 }
 }
 

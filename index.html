@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smile's Premium Birthday App</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+body{
+background:#050505;
+overflow-x:hidden;
+color:white;
+}
+
+#loader{
+position:fixed;
+inset:0;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:99999;
+transition: opacity 0.5s ease;
+}
+
+.loader-heart{
+font-size:80px;
+animation:beat 1s infinite;
+}
+
+@keyframes beat{
+0%{transform:scale(1)}
+50%{transform:scale(1.2)}
+100%{transform:scale(1)}
+}
+
+.loading-text{
+margin-top:20px;
+font-size:22px;
+letter-spacing:3px;
+color:#ff5e8a;
+margin-bottom: 30px;
+}
+
+.start-btn {
+padding: 12px 35px;
+font-size: 18px;
+color: white;
+background: #ff2d75;
+border: none;
+border-radius: 25px;
+cursor: pointer;
+box-shadow: 0 0 20px rgba(255, 45, 117, 0.6);
+transition: 0.3s;
+}
+
+.start-btn:hover {
+transform: scale(1.05);
+background: #ff5e8a;
+}
+
+canvas{
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:1;
+}
+
+header{
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:30px;
+position:relative;
+z-index:2;
+background:linear-gradient(180deg,#12050d,#000000);
+}
+
+.hero{
+max-width:900px;
+}
+
+.hero h1{
+font-size:70px;
+background:linear-gradient(45deg,#fff,#ff6fa0);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:22px;
+line-height:1.8;
+color:#ccc;
+}
+
+.enter-btn{
+margin-top:40px;
+padding:18px 45px;
+border:none;
+border-radius:50px;
+font-size:20px;
+background:linear-gradient(45deg,#ff2d75,#ff7ca8);
+color:white;
+cursor:pointer;
+box-shadow:0 0 40px rgba(255,0,98,.5);
+transition:.4s;
+}
+
+.enter-btn:hover{
+transform:scale(1.05);
+}
+
+.section{
+padding:100px 20px;
+position:relative;
+z-index:2;
+}
+
+.section-title{
+text-align:center;
+font-size:50px;
+margin-bottom:50px;
+color:#ff7da8;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+max-width:1200px;
+margin:auto;
+}
+
+.card{
+background:#121212;
+border-radius:25px;
+overflow:hidden;
+box-shadow:0 10px 40px rgba(0,0,0,.5);
+transition:.5s;
+}
+
+.card:hover{
+transform:translateY(-10px) scale(1.03);
+}
+
+.card img{
+width:100%;
+height:350px;
+object-fit:cover;
+}
+
+.caption{
+padding:20px;
+text-align:center;
+font-size:20px;
+}
+
+.typing-box{
+max-width:900px;
+margin:auto;
+background:#101010;
+padding:40px;
+border-radius:30px;
+font-size:24px;
+line-height:2;
+min-height:250px;
+box-shadow:0 0 30px rgba(255,0,98,.2);
+}
+
+.countdown{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+margin-top:40px;
+}
+
+.time-box{
+width:140px;
+height:140px;
+border-radius:25px;
+background:#121212;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+font-size:20px;
+box-shadow:0 0 20px rgba(255,0,98,.2);
+}
+
+.time-box span{
+font-size:45px;
+font-weight:bold;
+color:#ff6b9b;
+}
+
+.music-btn{
+position:fixed;
+bottom:20px;
+right:20px;
+width:70px;
+height:70px;
+border-radius:50%;
+border:none;
+background:#ff2d75;
+color:white;
+font-size:30px;
+cursor:pointer;
+z-index:999;
+}
+
+.message-page{
+max-width:1000px;
+margin:auto;
+background:#121212;
+padding:50px;
+border-radius:35px;
+line-height:2;
+font-size:22px;
+}
+
+.fireworks-text{
+font-size:70px;
+text-align:center;
+margin-top:50px;
+animation:glow 2s infinite;
+}
+
+@keyframes glow{
+0%{text-shadow:0 0 10px #ff4d88}
+50%{text-shadow:0 0 40px #ff4d88}
+100%{text-shadow:0 0 10px #ff4d88}
+}
+
+footer{
+padding:100px 20px;
+text-align:center;
+font-size:20px;
+color:#aaa;
+}
+
+@media(max-width:700px){
+.hero h1{
+font-size:42px;
+}
+
+.section-title{
+font-size:36px;
+}
+
+.typing-box{
+font-size:19px;
+}
+
+.message-page{
+font-size:18px;
+padding:30px;
+}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+<div class="loader-heart">💖</div>
+<div class="loading-text">Smile's Birthday App is Ready</div>
+<button class="start-btn" onclick="startApp()">Enter App ✨</button>
+</div>
+
+<canvas id="fireworks"></canvas>
+
+<header>
+<div class="hero">
+<h1>Happy 18th Birthday Smile ✨</h1>
+<p>
+A premium birthday experience made specially for you.
+Filled with memories, animations, fireworks, music and love.
+</p>
+<button class="enter-btn" onclick="openApp()">Open Birthday App 🎁</button>
+</div>
+</header>
+
+<section class="section">
+<h2 class="section-title">Beautiful Memories 💖</h2>
+
+<div class="gallery">
+
+<div class="card">
+<img src="photo1.jpg" alt="Smile Memory 1">
+<div class="caption">Your Smile Is Everything ✨</div>
+</div>
+
+<div class="card">
+<img src="photo2.jpg" alt="Smile Memory 2">
+<div class="caption">Pretty Girl Energy 💕</div>
+</div>
+
+<div class="card">
+<img src="photo3.jpg" alt="Smile Memory 3">
+<div class="caption">A Whole Queen 👑</div>
+</div>
+
+<div class="card">
+<img src="photo4.jpg" alt="Smile Memory 4">
+<div class="caption">Beautiful Memories 🌸</div>
+</div>
+
+<div class="card">
+<img src="photo5.jpg" alt="Smile Memory 5">
+<div class="caption">18 Looks Amazing On You 🎂</div>
+</div>
+
+<div class="card">
+<img src="photo6.jpg" alt="Smile Memory 6">
+<div class="caption">Forever Stunning 💖</div>
+</div>
+
+<div class="card">
+<img src="photo7.jpg" alt="Smile Memory 7">
+<div class="caption">Soft Smile Magic ✨</div>
+</div>
+
+<div class="card">
+<img src="photo8.jpg" alt="Smile Memory 8">
+<div class="caption">Smile The Star 🌟</div>
+</div>
+
+<div class="card">
+<img src="photo9.jpg" alt="Smile Memory 9">
+<div class="caption">Main Character Energy 💃</div>
+</div>
+
+<div class="card">
+<img src="photo10.jpg" alt="Smile Memory 10">
+<div class="caption">Simply Radiant ✨</div>
+</div>
+
+<div class="card">
+<img src="photo11.jpg" alt="Smile Memory 11">
+<div class="caption">Pure Happiness 💖</div>
+</div>
+
+<div class="card">
+<img src="photo12.jpg" alt="Smile Memory 12">
+<div class="caption">Bestie Vibes Only 🌸</div>
+</div>
+
+<div class="card">
+<img src="photo13.jpg" alt="Smile Memory 13">
+<div class="caption">Our Golden Queen 👑</div>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2 class="section-title">Live Birthday Countdown ⏳</h2>
+
+<div class="countdown">
+<div class="time-box"><span id="days">00</span>Days</div>
+<div class="time-box"><span id="hours">00</span>Hours</div>
+<div class="time-box"><span id="minutes">00</span>Minutes</div>
+<div class="time-box"><span id="seconds">00</span>Seconds</div>
+</div>
+</section>
+
+<section class="section">
+<h2 class="section-title">A Message For Smile 💌</h2>
+
+<div class="typing-box">
+<span id="typing"></span>
+</div>
+</section>
+
+<section class="section">
+<h2 class="section-title">Secret Birthday Letter ✨</h2>
+
+<div class="message-page">
+<p>
+Happy birthday Smile.<br><br>
+
+Today is all about celebrating the amazing person you are becoming.
+You deserve joy, peace, love, laughter and beautiful memories.<br><br>
+
+Every smile you make, every laugh you share and every moment you create makes life more beautiful around you(Even though i never met you🤭).<br><br>
+
+I hope your new age comes with confidence, success, happiness and unforgettable adventures.<br><br>
+
+Keep shining.<br>
+Keep smiling.<br>
+Keep being you.<br><br>
+
+<strong>Happy 18th Birthday Queen 💖</strong>
+</p>
+</div>
+
+<div class="fireworks-text">
+🎆 HAPPY 18TH BIRTHDAY SHANTEL 🎆
+</div>
+</section>
+
+<footer>
+Made with ❤️ specially for Smile.
+</footer>
+
+<button class="music-btn" onclick="toggleMusic()">🎵</button>
+
+<audio id="music" loop>
+<source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music=document.getElementById('music');
+
+// Triggers immediately when they click "Enter App" on the loading screen
+function startApp() {
+const loader = document.getElementById('loader');
+loader.style.opacity = '0';
+setTimeout(() => loader.style.display='none', 500);
+
+// Play music immediately
+music.play().catch(err => console.log("Audio play allowed after click"));
+}
+
+let appOpened = false;
+function openApp(){
+window.scrollTo({top:window.innerHeight,behavior:'smooth'});
+launchFireworks();
+
+if(!appOpened){
+appOpened = true;
+typeText();
+}
+// Keeps music playing smoothly if already active
+music.play().catch(err => console.log("Audio error check"));
+}
+
+const text=`Shantel, today the world feels brighter because it is your birthday. You are beautiful, special, kind and unforgettable. May your smile never fade and may happiness always find you. Happy Birthday Queen ✨💖`;
+let index=0;
+
+function typeText(){
+if(index<text.length){
+document.getElementById('typing').innerHTML+=text.charAt(index);
+index++;
+setTimeout(typeText,45);
+}
+}
+
+function updateCountdown(){
+const target=new Date('2026-06-05T00:00:00').getTime();
+const now=new Date().getTime();
+const diff=target-now;
+
+if (diff <= 0) {
+document.getElementById('days').innerHTML="00";
+document.getElementById('hours').innerHTML="00";
+document.getElementById('minutes').innerHTML="00";
+document.getElementById('seconds').innerHTML="00";
+return;
+}
+
+const days=Math.floor(diff/(1000*60*60*24));
+const hours=Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+const minutes=Math.floor((diff%(1000*60*60))/(1000*60));
+const seconds=Math.floor((diff%(1000*60))/1000);
+
+document.getElementById('days').innerHTML=days.toString().padStart(2, '0');
+document.getElementById('hours').innerHTML=hours.toString().padStart(2, '0');
+document.getElementById('minutes').innerHTML=minutes.toString().padStart(2, '0');
+document.getElementById('seconds').innerHTML=seconds.toString().padStart(2, '0');
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+function toggleMusic(){
+if(music.paused){
+music.play().catch(err => console.log("Audio playback error"));
+}else{
+music.pause();
+}
+}
+
+const canvas=document.getElementById('fireworks');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+window.addEventListener('resize',()=>{
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+});
+
+let particles=[];
+
+function createFirework(){
+const x=Math.random()*canvas.width;
+const y=Math.random()*(canvas.height/2);
+
+for(let i=0;i<60;i++){ 
+particles.push({
+x:x,
+y:y,
+angle:Math.random()*Math.PI*2,
+speed:Math.random()*5+2,
+radius:Math.random()*2.5+1,
+life:100,
+hue: Math.random()*360
+});
+}
+}
+
+function animate(){
+requestAnimationFrame(animate);
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for (let i = particles.length - 1; i >= 0; i--) {
+const p = particles[i];
+p.x+=Math.cos(p.angle)*p.speed;
+p.y+=Math.sin(p.angle)*p.speed;
+p.life--;
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+ctx.fillStyle=`hsl(${p.hue},100%,60%)`;
+ctx.fill();
+
+if(p.life<=0){
+particles.splice(i,1);
+}
+}
+}
+
+animate();
+
+let fireworksInterval;
+function launchFireworks(){
+if(!fireworksInterval){
+fireworksInterval = setInterval(createFirework,1200);
+}
+}
+
+for(let i=0;i<50;i++){ 
+const heart=document.createElement('div');
+heart.innerHTML='💖';
+heart.style.position='fixed';
+heart.style.left=Math.random()*100+'vw';
+heart.style.top=Math.random()*100+'vh';
+heart.style.fontSize=Math.random()*20+10+'px';
+heart.style.opacity=.15;
+heart.style.pointerEvents='none';
+heart.style.zIndex='0';
+heart.style.animation=`float ${Math.random()*10+10}s linear infinite`;
+document.body.appendChild(heart);
+}
+
+const style=document.createElement('style');
+style.innerHTML=`
+@keyframes float{
+0%{transform:translateY(10vh) scale(1); opacity: 0;}
+10%{opacity: 0.15;}
+90%{opacity: 0.15;}
+100%{transform:translateY(-100vh) scale(0.8); opacity: 0;}
+}
+`;
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
